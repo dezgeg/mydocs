@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>MyDocs</title>
+    </head>
+    <body>
+        <h1>MyDocs</h1>
+		<a href="add">Add a document</a>
+        <ul>
+			{% for doc in docs %}
+				<li>
+					<a href="{{ doc.id }}">{{ doc }}</a>
+					<a href="delete/{{ doc.id }}">poista</a>
+				</li>
+			{% endfor %}
+        </ul>
+	</body>
+</html>
+

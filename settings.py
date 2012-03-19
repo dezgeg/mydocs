@@ -109,6 +109,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+	'mydocs.edit',
     #'django.contrib.auth',
     #'django.contrib.contenttypes',
     'django.contrib.sessions',
