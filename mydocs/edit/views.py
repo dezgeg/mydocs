@@ -21,7 +21,7 @@ def add(request):
 		return render(request, 'edit.html', { 'document_form': DocumentForm() })
 
 def edit(request, id):
-	document = get_object_or_404(Document, pk=int(id))
+	document = get_object_or_404(Document, pk=id)
 	if request.POST:
 		new_doc = DocumentForm(request.POST, instance= document)
 		new_doc.save()
@@ -30,6 +30,6 @@ def edit(request, id):
 		return render(request, 'edit.html', { 'id': id, 'document_form': DocumentForm(instance= document) })
 
 def delete(request, id):
-	document = get_object_or_404(Document, pk=int(id))
+	document = get_object_or_404(Document, pk=id)
 	document.delete()
 	return HttpResponseRedirect('/')

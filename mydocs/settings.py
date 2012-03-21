@@ -11,16 +11,22 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+pw = os.environ.get('MONGODB_PASS') # Heroku uses this
+if pw is None:
+	with open(os.path.join(PROJECT_PATH, 'mongodb.pass')) as f: # Local machine uses this
+		pw = f.readline().strip()
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.path.join(PROJECT_PATH, 'db.sqlite'),                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django_mongodb_engine',
+        'NAME': 'mydocs',
+        'USER': 'mydocs',
+        'PASSWORD': pw,
+        'HOST': 'ec2-107-20-54-207.compute-1.amazonaws.com',
+        'PORT': '',
     }
 }
+del os.environ['DATABASE_URL'] # Prevent Heroku from using the default postgres
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
