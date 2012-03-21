@@ -6,6 +6,11 @@
     </head>
     <body>
         <h1>MyDocs</h1>
+			{% if user.is_authenticated %}
+				Logged in as {{ user.first_name }} {{ user.last_name }}.<br/>
+			{% else %}
+				Not logged in.<br/>
+			{% endif %}
 		<a href="add">Add a document</a>
         <ul>
 			{% for doc in docs %}

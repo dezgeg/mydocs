@@ -117,8 +117,9 @@ TEMPLATE_DIRS = (
 
 INSTALLED_APPS = (
 	'mydocs.edit',
-    #'django.contrib.auth',
-    #'django.contrib.contenttypes',
+	'django_openid_auth',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
@@ -128,6 +129,15 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
+# For OpenID
+AUTHENTICATION_BACKENDS = (
+	'django_openid_auth.auth.OpenIDBackend',
+	'django.contrib.auth.backends.ModelBackend',
+)
+OPENID_CREATE_USERS = True
+OPENID_UPDATE_DETAILS_FROM_SREG = True
+LOGIN_URL = '/openid/login/'
+LOGIN_REDIRECT_URL = '/'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

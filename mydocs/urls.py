@@ -6,4 +6,5 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('mydocs',
 	url(r'^', include('edit.urls')),
+	url(r'^openid/', include('django_openid_auth.urls')),
 )
