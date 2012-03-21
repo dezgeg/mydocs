@@ -26,7 +26,7 @@ DATABASES = {
         'PORT': '',
     }
 }
-if os.environ['DATABASE_URL']:
+if 'DATABASE_URL' in os.environ:
 	del os.environ['DATABASE_URL'] # Prevent Heroku from using the default postgres
 
 # Local time zone for this installation. Choices can be found here:
