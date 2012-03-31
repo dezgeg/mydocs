@@ -16,8 +16,14 @@ if pw is None:
 	with open(os.path.join(PROJECT_PATH, 'mongodb.pass')) as f: # Local machine uses this
 		pw = f.readline().strip()
 
+# The OpenID auth plugin uses joins in it's code, so it can't be used with MongoDB.
+DATABASE_ROUTERS = ['mydocs.db_routers.DocumentRouter']
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(PROJECT_PATH, 'db.sqlite'),
+    },
+    'documents': {
         'ENGINE': 'django_mongodb_engine',
         'NAME': 'mydocs',
         'USER': 'mydocs',
