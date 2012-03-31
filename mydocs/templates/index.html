@@ -10,7 +10,13 @@
 				Logged in as {{ user.first_name }} {{ user.last_name }}.<br/>
 			{% else %}
 				Not logged in.<br/>
+                <form name="fopenid" action="/openid/login/" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="openid_identifier" value="https://www.google.com/accounts/o8/id"/>
+                    <input type="submit" value="Log in via Google"/>
+                </form>
 			{% endif %}
+        <hr/>
 		<a href="add">Add a document</a>
         <ul>
 			{% for doc in docs %}
