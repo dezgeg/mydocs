@@ -142,7 +142,7 @@ AUTHENTICATION_BACKENDS = (
 )
 OPENID_CREATE_USERS = True
 OPENID_UPDATE_DETAILS_FROM_SREG = True
-LOGIN_URL = '/openid/login/'
+LOGIN_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 
 # A sample logging configuration. The only tangible logging
