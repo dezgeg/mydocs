@@ -6,6 +6,7 @@
         {% for doc in docs %}
             <li>
                 <a href="{{ doc.id }}">{{ doc }}</a>
+                {{ doc.tags|join:", " }}
                 <a href="delete/{{ doc.id }}">delete</a>
             </li>
         {% endfor %}
