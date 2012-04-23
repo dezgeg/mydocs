@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django_openid_auth.exceptions import IdentityAlreadyClaimed
-from djangotoolbox.fields import ListField
+from djangotoolbox.fields import ListField, DictField, EmbeddedModelField
 from django import forms
 
 # A form field for ListField: https://gist.github.com/1200165
@@ -18,10 +18,23 @@ class StringListField(forms.CharField):
 
 ListField.formfield = lambda self, **kwargs: models.Field.formfield(self, StringListField, **kwargs)
 
+PERMISSIONS = (
+    (1, 'Access'),
+    (2, 'Modify'),
+    (3, 'Change ownership')
+)
+
+class UserPermission(models.Model):
+    email = models.CharField(max_length=64)
+    permission = models.IntegerField(choices=PERMISSIONS)
+
 class Document(models.Model):
     name = models.CharField(max_length=64)
     content = models.TextField()
     tags = ListField(models.CharField(max_length=16))
+    listed = models.BooleanField()
+    permissions = ListField(EmbeddedModelField(UserPermission))
+    owner = models.CharField(max_length=64)
 
     def __unicode__(self):
         return self.name

@@ -1,0 +1,11 @@
+{% extends "page.html" %}
+{% block content %}
+    <h1>Editing permissions for {{ doc.name }}</h1>
+    <form method="POST" action="">
+        {% csrf_token %}
+        <table>
+            {{ forms.as_ul }}
+        </table>
+        <input type="submit" value="Save"/>
+    </form>
+{% endblock %}
