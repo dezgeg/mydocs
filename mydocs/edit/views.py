@@ -4,24 +4,29 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.forms import ModelForm, ValidationError
 from django.forms.models import modelformset_factory
+from django.contrib.auth.decorators import login_required
 
 class DocumentForm(ModelForm):
     class Meta:
         model = Document
-        exclude = ('permissions',)
+        exclude = ('permissions', 'owner')
 
 def index(request):
-	docs = Document.objects.all()
+	docs = Document.find_accessible_by(request.user)
 	return render(request, 'index.html', { 'docs': docs })
 
+@login_required
 def add(request):
 	if request.POST:
 		doc = DocumentForm(request.POST)
+		doc = doc.save(False)
+		doc.owner = request.user.email
 		doc.save()
 		return HttpResponseRedirect('/')
 	else:
 		return render(request, 'edit.html', { 'document_form': DocumentForm() })
 
+@login_required
 def edit(request, id):
 	document = get_object_or_404(Document, pk=id)
 	if request.POST:
@@ -31,6 +36,7 @@ def edit(request, id):
 	else:
 		return render(request, 'edit.html', { 'id': id, 'document_form': DocumentForm(instance= document) })
 
+@login_required
 def delete(request, id):
 	document = get_object_or_404(Document, pk=id)
 	document.delete()
@@ -38,6 +44,7 @@ def delete(request, id):
 
 PermissionFormset = modelformset_factory(UserPermission, extra=3, can_delete=True)
 
+@login_required
 def change_permissions(request, id):
     document = get_object_or_404(Document, pk=id)
     if request.POST:
