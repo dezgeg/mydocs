@@ -33,16 +33,14 @@ def edit(request, document):
 		return render(request, 'edit.html', { 'id': id, 'document_form': DocumentForm(instance= document) })
 
 @document_view(Permission.Owner)
-def delete(request, id):
-	document = get_object_or_404(Document, pk=id)
+def delete(request, document):
 	document.delete()
 	return HttpResponseRedirect('/')
 
 PermissionFormset = modelformset_factory(UserPermission, extra=3, can_delete=True)
 
 @document_view(Permission.ChangePerms)
-def change_permissions(request, id):
-    document = get_object_or_404(Document, pk=id)
+def change_permissions(request, document):
     if request.POST:
         perms = PermissionFormset(request.POST).save(commit=False)
         document.permissions = perms

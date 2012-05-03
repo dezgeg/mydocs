@@ -12,7 +12,9 @@ ADMINS = (
 MANAGERS = ADMINS
 
 pw = os.environ.get('MONGODB_PASS') # Heroku uses this
+IN_HEROKU = True
 if pw is None:
+	IN_HEROKU = False
 	with open(os.path.join(PROJECT_PATH, 'mongodb.pass')) as f: # Local machine uses this
 		pw = f.readline().strip()
 
@@ -133,6 +135,9 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
+if not IN_HEROKU:
+	INSTALLED_APPS += ('lettuce.django',)
+
 # For OpenID
 AUTHENTICATION_BACKENDS = (
 	'django_openid_auth.auth.OpenIDBackend',
