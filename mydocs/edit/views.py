@@ -1,15 +1,12 @@
 # encoding: UTF-8
-from mydocs.edit.models import Document, UserPermission
+from mydocs.edit.models import Document, UserPermission, Permission
+from mydocs.edit.view_helpers import DocumentForm, document_view
+
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.forms import ModelForm, ValidationError
 from django.forms.models import modelformset_factory
 from django.contrib.auth.decorators import login_required
-
-class DocumentForm(ModelForm):
-    class Meta:
-        model = Document
-        exclude = ('permissions', 'owner')
 
 def index(request):
 	docs = Document.find_accessible_by(request.user)
@@ -26,9 +23,8 @@ def add(request):
 	else:
 		return render(request, 'edit.html', { 'document_form': DocumentForm() })
 
-@login_required
-def edit(request, id):
-	document = get_object_or_404(Document, pk=id)
+@document_view(Permission.Read, Permission.Modify)
+def edit(request, document):
 	if request.POST:
 		new_doc = DocumentForm(request.POST, instance= document)
 		new_doc.save()
@@ -36,7 +32,7 @@ def edit(request, id):
 	else:
 		return render(request, 'edit.html', { 'id': id, 'document_form': DocumentForm(instance= document) })
 
-@login_required
+@document_view(Permission.Owner)
 def delete(request, id):
 	document = get_object_or_404(Document, pk=id)
 	document.delete()
@@ -44,7 +40,7 @@ def delete(request, id):
 
 PermissionFormset = modelformset_factory(UserPermission, extra=3, can_delete=True)
 
-@login_required
+@document_view(Permission.ChangePerms)
 def change_permissions(request, id):
     document = get_object_or_404(Document, pk=id)
     if request.POST:

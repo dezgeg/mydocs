@@ -5,24 +5,18 @@ from django.dispatch import receiver
 from django_openid_auth.exceptions import IdentityAlreadyClaimed
 from djangotoolbox.fields import ListField, DictField, EmbeddedModelField
 from django_mongodb_engine.contrib import MongoDBManager
-from django import forms
 
-# A form field for ListField: https://gist.github.com/1200165
-class StringListField(forms.CharField):
-    def prepare_value(self, value):
-        return ', '.join(value)
+class Permission:
+	Read = 1
+	Modify = 2
+	ChangePerms = 5
+	Owner = 4
 
-    def to_python(self, value):
-        if not value:
-            return []
-        return [item.strip() for item in value.split(',')]
-
-ListField.formfield = lambda self, **kwargs: models.Field.formfield(self, StringListField, **kwargs)
-
+# These are the permissions selectable from the listboxes
 PERMISSIONS = (
-    (1, 'Access'),
-    (2, 'Modify'),
-    (3, 'Change permissions')
+    (Permission.Read, 'Access'),
+    (Permission.Modify, 'Modify'),
+    (Permission.ChangePerms, 'Change permissions')
 )
 
 class UserPermission(models.Model):
@@ -40,6 +34,17 @@ class Document(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def get_permission_for(self, user):
+        if not user.is_authenticated():
+            return None
+        elif user.email == self.owner:
+            return Permission.Owner
+        for perm in self.permissions:
+            if perm.email == user.email:
+                return perm.permission
+
+        return None
 
     @staticmethod
     def find_accessible_by(user):
