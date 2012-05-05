@@ -19,5 +19,5 @@ Feature: Add an delete documents
         And I have the document "DONOTWANT"
         And I am at the index page
         When I click "[delete]"
-        Then I should be at the index page
-        And I should not see "DONOTWANT"
+        Then I should not see "DONOTWANT"
+        And I should be at the index page

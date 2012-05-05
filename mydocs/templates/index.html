@@ -5,15 +5,15 @@
         Log in to add documents.
     {% else %}
         <a href="add">Add a document</a>
-        <ul>
-            {% for doc in docs %}
-                <li>
-                    <a href="{{ doc.id }}">{{ doc }}</a>
-                    {{ doc.tags|join:", " }}
-                    <a href="delete/{{ doc.id }}">[delete]</a>
-                    <a href="permissions/{{ doc.id }}">[change permissions]</a>
-                </li>
-            {% endfor %}
-        </ul>
+
+        <h2>My own documents</h2>
+        <table class="my_docs" border="1">
+            {% include "document_list.html" with docs=my_docs %}
+        </table>
+
+        <h2>Other people's documents</h2>
+        <table class="my_docs" border="1">
+            {% include "document_list.html" with docs=others_docs %}
+        </table>
     {% endif %}
 {% endblock %}

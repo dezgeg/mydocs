@@ -51,12 +51,17 @@ class Document(models.Model):
         if not user.is_authenticated():
             return Document.objects.none()
 
-        query = { '$or': [
-            { 'owner': user.email },
-            { 'permissions': {
+        query = {
+			'permissions': {
                 '$elemMatch': {
-                    'email': user.email }}}]}
+                    'email': user.email }}}
         return Document.objects.raw_query(query)
+
+    @staticmethod
+    def find_own(user):
+        if not user.is_authenticated():
+            return Document.objects.none()
+        return Document.objects.filter(owner=user.email)
 
 @receiver(pre_save, sender=User)
 def require_unique_email(sender, instance, **kwargs):

@@ -9,8 +9,12 @@ from django.forms.models import modelformset_factory
 from django.contrib.auth.decorators import login_required
 
 def index(request):
-	docs = Document.find_accessible_by(request.user)
-	return render(request, 'index.html', { 'docs': docs })
+	others_docs = Document.find_accessible_by(request.user)
+	my_docs = Document.find_own(request.user)
+	return render(request, 'index.html', {
+		'others_docs': others_docs,
+		'my_docs': my_docs
+	})
 
 @login_required
 def add(request):
