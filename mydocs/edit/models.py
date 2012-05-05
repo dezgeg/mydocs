@@ -7,10 +7,10 @@ from djangotoolbox.fields import ListField, DictField, EmbeddedModelField
 from django_mongodb_engine.contrib import MongoDBManager
 
 class Permission:
-	Read = 1
-	Modify = 2
-	ChangePerms = 5
-	Owner = 4
+    Read = 1
+    Modify = 2
+    ChangePerms = 5
+    Owner = 4
 
 # These are the permissions selectable from the listboxes
 PERMISSIONS = (
@@ -52,7 +52,7 @@ class Document(models.Model):
             return Document.objects.none()
 
         query = {
-			'permissions': {
+            'permissions': {
                 '$elemMatch': {
                     'email': user.email }}}
         return Document.objects.raw_query(query)

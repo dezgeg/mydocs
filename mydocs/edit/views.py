@@ -9,37 +9,37 @@ from django.forms.models import modelformset_factory
 from django.contrib.auth.decorators import login_required
 
 def index(request):
-	others_docs = Document.find_accessible_by(request.user)
-	my_docs = Document.find_own(request.user)
-	return render(request, 'index.html', {
-		'others_docs': others_docs,
-		'my_docs': my_docs
-	})
+    others_docs = Document.find_accessible_by(request.user)
+    my_docs = Document.find_own(request.user)
+    return render(request, 'index.html', {
+        'others_docs': others_docs,
+        'my_docs': my_docs
+    })
 
 @login_required
 def add(request):
-	if request.POST:
-		doc = DocumentForm(request.POST)
-		doc = doc.save(False)
-		doc.owner = request.user.email
-		doc.save()
-		return HttpResponseRedirect('/')
-	else:
-		return render(request, 'edit.html', { 'document_form': DocumentForm() })
+    if request.POST:
+        doc = DocumentForm(request.POST)
+        doc = doc.save(False)
+        doc.owner = request.user.email
+        doc.save()
+        return HttpResponseRedirect('/')
+    else:
+        return render(request, 'edit.html', { 'document_form': DocumentForm() })
 
 @document_view(Permission.Read, Permission.Modify)
 def edit(request, document):
-	if request.POST:
-		new_doc = DocumentForm(request.POST, instance= document)
-		new_doc.save()
-		return HttpResponseRedirect('/')
-	else:
-		return render(request, 'edit.html', { 'id': id, 'document_form': DocumentForm(instance= document) })
+    if request.POST:
+        new_doc = DocumentForm(request.POST, instance= document)
+        new_doc.save()
+        return HttpResponseRedirect('/')
+    else:
+        return render(request, 'edit.html', { 'id': id, 'document_form': DocumentForm(instance= document) })
 
 @document_view(Permission.Owner)
 def delete(request, document):
-	document.delete()
-	return HttpResponseRedirect('/')
+    document.delete()
+    return HttpResponseRedirect('/')
 
 PermissionFormset = modelformset_factory(UserPermission, extra=3, can_delete=True)
 

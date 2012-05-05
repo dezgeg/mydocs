@@ -14,9 +14,9 @@ MANAGERS = ADMINS
 pw = os.environ.get('MONGODB_PASS') # Heroku uses this
 IN_HEROKU = True
 if pw is None:
-	IN_HEROKU = False
-	with open(os.path.join(PROJECT_PATH, 'mongodb.pass')) as f: # Local machine uses this
-		pw = f.readline().strip()
+    IN_HEROKU = False
+    with open(os.path.join(PROJECT_PATH, 'mongodb.pass')) as f: # Local machine uses this
+        pw = f.readline().strip()
 
 # The OpenID auth plugin uses joins in it's code, so it can't be used with MongoDB.
 DATABASE_ROUTERS = ['mydocs.db_routers.DocumentRouter']
@@ -118,14 +118,14 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'mydocs.urls'
 
 TEMPLATE_DIRS = (
-	os.path.join(PROJECT_PATH, 'templates'),
+    os.path.join(PROJECT_PATH, 'templates'),
 )
 
 INSTALLED_APPS = (
-	'mydocs.edit',
-	'django_openid_auth',
-	'django.contrib.auth',
-	'django.contrib.contenttypes',
+    'mydocs.edit',
+    'django_openid_auth',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
@@ -136,12 +136,12 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 )
 if not IN_HEROKU:
-	INSTALLED_APPS += ('lettuce.django',)
+    INSTALLED_APPS += ('lettuce.django',)
 
 # For OpenID
 AUTHENTICATION_BACKENDS = (
-	'django_openid_auth.auth.OpenIDBackend',
-	'django.contrib.auth.backends.ModelBackend',
+    'django_openid_auth.auth.OpenIDBackend',
+    'django.contrib.auth.backends.ModelBackend',
 )
 OPENID_CREATE_USERS = True
 OPENID_UPDATE_DETAILS_FROM_SREG = True
