@@ -8,3 +8,8 @@ class DocumentRouter(object):
 
     def db_for_write(self, model, **hints):
         return self.db_for_read(model, **hints)
+
+    def allow_syncdb(self, db, model):
+        if model._meta.object_name in ('Document', 'UserPermission'):
+            return db == 'documents'
+        return True
