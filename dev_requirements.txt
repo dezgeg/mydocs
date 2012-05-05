@@ -1,0 +1,5 @@
+ipython==0.12
+lettuce==0.1.35
+lettuce-webdriver==0.2
+nose==1.1.2
+selenium==2.21.2

@@ -12,8 +12,12 @@ from django.contrib.auth.models import User
 from nose.tools import ok_
 
 @before.all
-def set_browser():
+def setup():
     world.browser = webdriver.Firefox()
+
+@after.all
+def teardown(results):
+    world.browser.quit()
 
 def goto_url(url):
     world.browser.get(django_url(url))

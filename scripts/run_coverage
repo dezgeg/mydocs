@@ -1,0 +1,17 @@
+#!/bin/bash -i
+cd "$(dirname "$0")/.."
+
+coverage erase
+COVERAGE_PROCESS_START=1 coverage run -p --source mydocs \
+    mydocs/manage.py runserver --noreload&
+SERVER_PID=$!
+mydocs/manage.py harvest --app mydocs.edit --no-server
+kill -INT $SERVER_PID
+
+sleep 2
+kill $SERVER_PID # just in case.
+
+coverage combine
+coverage report
+coverage html
+cd scripts/
