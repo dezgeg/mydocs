@@ -1,17 +1,31 @@
-#!/bin/bash -i
+#!/bin/bash
+# Run the tests with code coverage, and produce results to <project>/htmlcov/.
+# Usage: cd <project>/scripts
+#        bash
+#        source ./run_coverage [<opt-feature-file>]
+
 cd "$(dirname "$0")/.."
+EXCLUDE='mydocs/manage.py,*/__init__.py'
 
 coverage erase
+
+# We cannot run manage.py harvest under coverage directly, since it seems to
+# launch the server with code reloading enabled, which confuses coverage.
+
+# However, there seems to be no other way than SIGINT to gracefully shut down
+# the server, but django (or python?) seems to ignore SIGINT if not running
+# interactively. (i.e. doesn't have a controlling terminal). Therefore we have
+# to use the 'source' kludge to run interactively. This sucks.
 COVERAGE_PROCESS_START=1 coverage run -p --source mydocs \
     mydocs/manage.py runserver --noreload&
 SERVER_PID=$!
-mydocs/manage.py harvest --app mydocs.edit --no-server "$1"
+mydocs/manage.py harvest --app mydocs.edit --no-server $1
 kill -INT $SERVER_PID
 
 sleep 2
 kill $SERVER_PID # just in case.
 
 coverage combine
-coverage report
-coverage html
+coverage report --omit "$EXCLUDE"
+coverage html --omit "$EXCLUDE"
 cd scripts/
