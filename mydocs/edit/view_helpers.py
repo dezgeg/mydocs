@@ -8,18 +8,6 @@ from djangotoolbox.fields import ListField
 from django.forms import ModelForm, ValidationError
 from django.contrib.auth.decorators import login_required
 
-# A form field for ListField: https://gist.github.com/1200165
-class StringListField(forms.CharField):
-    def prepare_value(self, value):
-        return ', '.join(value)
-
-    def to_python(self, value):
-        if not value:
-            return []
-        return [item.strip() for item in value.split(',')]
-
-ListField.formfield = lambda self, **kwargs: models.Field.formfield(self, StringListField, **kwargs)
-
 class DocumentForm(ModelForm):
     class Meta:
         model = Document

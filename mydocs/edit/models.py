@@ -28,7 +28,6 @@ class Document(models.Model):
 
     name = models.CharField(max_length=64)
     content = models.TextField()
-    tags = ListField(models.CharField(max_length=16, blank=True))
     permissions = ListField(EmbeddedModelField(UserPermission))
     owner = models.CharField(max_length=64)
 

@@ -7,7 +7,6 @@ Feature: Add an delete documents
         And I click "Add a document"
         And I fill in "Name" with "Test document"
         And I fill in "Content" with "Test stuff"
-        And I fill in "Tags" with "tag1 tag2"
         And I press "Save"
         Then I should be at the index page
         And I should see "Test document"

@@ -2,7 +2,6 @@
     <tr>
         <th>Name</th>
         <th>Owner</th>
-        <th>Tags</th>
         <th>Actions</th>
     </tr>
 {% endif %}
@@ -10,7 +9,6 @@
     <tr>
         <td><a href="{{ doc.id }}">{{ doc }}</a></td>
         <td>{{ doc.owner }}</td>
-        <td>{{ doc.tags|join:", " }}</td>
         <td>
             <a href="delete/{{ doc.id }}">[delete]</a>
             <a href="permissions/{{ doc.id }}">[change permissions]</a>
