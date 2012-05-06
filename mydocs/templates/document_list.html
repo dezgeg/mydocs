@@ -1,3 +1,4 @@
+{% load document_permissions %}
 {% if docs %}
     <tr>
         <th>Name</th>
@@ -10,8 +11,12 @@
         <td><a href="{{ doc.id }}">{{ doc }}</a></td>
         <td>{{ doc.owner }}</td>
         <td>
-            <a href="delete/{{ doc.id }}">[delete]</a>
-            <a href="permissions/{{ doc.id }}">[change permissions]</a>
+            {% if user|can_delete:doc %}
+                <a href="delete/{{ doc.id }}">[delete]</a>
+            {% endif %}
+            {% if user|can_change_perms:doc %}
+                <a href="permissions/{{ doc.id }}">[change permissions]</a>
+            {% endif %}
         </td>
     </tr>
 {% empty %}

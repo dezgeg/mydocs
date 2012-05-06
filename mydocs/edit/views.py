@@ -1,6 +1,6 @@
 # encoding: UTF-8
 from mydocs.edit.models import Document, UserPermission, Permission
-from mydocs.edit.view_helpers import DocumentForm, document_view
+from mydocs.edit.view_helpers import *
 
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
@@ -19,22 +19,23 @@ def index(request):
 @login_required
 def add(request):
     if request.POST:
-        doc = DocumentForm(request.POST)
+        doc = OwnerDocumentForm(request.POST)
         doc = doc.save(False)
         doc.owner = request.user.email
         doc.save()
         return HttpResponseRedirect('/')
     else:
-        return render(request, 'edit.html', { 'document_form': DocumentForm() })
+        return render(request, 'edit.html', { 'document_form': OwnerDocumentForm() })
 
 @document_view(Permission.Read, Permission.Modify)
 def edit(request, document):
+    form_class = document_form_for_permission(document.get_permission_for(request.user))
     if request.POST:
-        new_doc = DocumentForm(request.POST, instance= document)
+        new_doc = form_class(request.POST, instance= document)
         new_doc.save()
         return HttpResponseRedirect('/')
     else:
-        return render(request, 'edit.html', { 'id': document.id, 'document_form': DocumentForm(instance= document) })
+        return render(request, 'edit.html', { 'id': document.id, 'document_form': form_class(instance= document) })
 
 @document_view(Permission.Owner)
 def delete(request, document):

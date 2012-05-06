@@ -9,7 +9,7 @@ from django_mongodb_engine.contrib import MongoDBManager
 class Permission:
     Read = 1
     Modify = 2
-    ChangePerms = 5
+    ChangePerms = 3
     Owner = 4
 
 # These are the permissions selectable from the listboxes

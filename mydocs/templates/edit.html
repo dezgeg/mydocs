@@ -1,9 +1,13 @@
 {% extends "page.html" %}
+{% load document_permissions %}
+
 {% block content %}
     <h1>Document</h1>
     <form method="POST" action="{{ id|default:"add" }}">
         {% csrf_token %}
         {{ document_form.as_p }}
-        <input type="submit" value="Save"/>
+        {% if user|can_modify:document_form.instance %}
+            <input type="submit" value="Save"/>
+        {% endif %}
     </form>
 {% endblock %}
