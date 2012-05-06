@@ -5,7 +5,7 @@ coverage erase
 COVERAGE_PROCESS_START=1 coverage run -p --source mydocs \
     mydocs/manage.py runserver --noreload&
 SERVER_PID=$!
-mydocs/manage.py harvest --app mydocs.edit --no-server
+mydocs/manage.py harvest --app mydocs.edit --no-server "$1"
 kill -INT $SERVER_PID
 
 sleep 2

@@ -34,7 +34,7 @@ def edit(request, document):
         new_doc.save()
         return HttpResponseRedirect('/')
     else:
-        return render(request, 'edit.html', { 'id': id, 'document_form': DocumentForm(instance= document) })
+        return render(request, 'edit.html', { 'id': document.id, 'document_form': DocumentForm(instance= document) })
 
 @document_view(Permission.Owner)
 def delete(request, document):

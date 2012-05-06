@@ -61,9 +61,9 @@ def when_i_log_in_as_group1(step, user):
 @step(u'When I log out')
 def when_i_log_out(step):
     goto_url('/logout')
-@step(u'And I have the document "([^"]*)"')
-def and_i_have_a_document_group1(step, name):
-    Document.objects.create(name=name, content="ASD", owner="UserA@test.com")
+@step(u'And I have the document "([^"]*)" containing "([^"]*)"')
+def and_i_have_a_document_group1(step, name, content):
+    Document.objects.create(name=name, content=content, owner="UserA@test.com")
 
 @step(u'Then I should see "([^"]*)" in "([^"]*)"')
 def then_i_should_see_group1_in_group2(step, value, name):

@@ -15,8 +15,19 @@ Feature: Add an delete documents
 
     Scenario: Delete a document
         Given I am logged in as "UserA"
-        And I have the document "DONOTWANT"
+        And I have the document "DONOTWANT" containing "Dont care"
         And I am at the index page
         When I click "[delete]"
         Then I should not see "DONOTWANT"
         And I should be at the index page
+
+    Scenario: Modify a document
+        Given I am logged in as "UserA"
+        And I have the document "CHANGEME" containing "Foo"
+        And I am at the index page
+        When I click "CHANGEME"
+        Then I should see "Foo"
+        When I fill in "Content" with "Bar"
+        And I press "Save"
+        And I click "CHANGEME"
+        Then I should see "Bar" in "Content"
