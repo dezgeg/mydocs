@@ -6,7 +6,7 @@
     <form method="POST" action="{{ id|default:"add" }}">
         {% csrf_token %}
         {{ document_form.as_p }}
-        {% if user|can_modify:document_form.instance %}
+        {% if not id or user|can_modify:document_form.instance %}
             <input type="submit" value="Save"/>
         {% endif %}
     </form>
