@@ -42,17 +42,19 @@ def delete(request, document):
     document.delete()
     return HttpResponseRedirect('/')
 
-PermissionFormset = modelformset_factory(UserPermission, extra=3, can_delete=True)
-
 @document_view(Permission.ChangePerms)
 def change_permissions(request, document):
     if request.POST:
+        PermissionFormset = modelformset_factory(UserPermission, can_delete=True)
         perms = PermissionFormset(request.POST).save(commit=False)
         document.permissions = perms
         document.save()
         return HttpResponseRedirect('/permissions/' + document.id)
     else:
-        # need this hack since django-nonrel's listfields are lists, not QuerySets
-        perms = map(lambda p: { 'email': p.email, 'permission': p.permission }, document.permissions)
+        # Real formset data should be populated via a queryset, but django-nonrel's ListFields
+        # return ordinary lists. So we hack around this by turning the objects to dicts, which
+        # can be entered as the initial form data, and then bump up the number of extra forms accordingly.
+        perms = map(lambda p: p.__dict__, document.permissions)
+        PermissionFormset = modelformset_factory(UserPermission, extra= 3 + len(perms), can_delete=True)
         forms = PermissionFormset(initial=perms)
         return render(request, 'permissions.html', { 'doc': document, 'forms': forms })
