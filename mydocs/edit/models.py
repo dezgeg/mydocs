@@ -27,7 +27,7 @@ class Document(models.Model):
     objects = MongoDBManager()
 
     name = models.CharField(max_length=64)
-    content = models.TextField()
+    content = models.TextField(blank=True)
     permissions = ListField(EmbeddedModelField(UserPermission))
     owner = models.CharField(max_length=64)
 

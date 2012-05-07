@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.test.client import Client
 from django.core.management import call_command
+from django.core.urlresolvers import reverse
+from mydocs.edit.models import Document
 from lettuce.django import django_url
 from lettuce import *
 
@@ -68,3 +70,18 @@ def and_i_have_a_document_group1(step, name, content):
 @step(u'Then I should see "([^"]*)" in "([^"]*)"')
 def then_i_should_see_group1_in_group2(step, value, name):
     return world.browser.find_element_by_xpath('//*[@name="%s"][contains(., "%s")]' % (name.lower(), value))
+
+@step(u'(?:And|Then|When) I visit the URL for "([^"]*)"')
+def and_i_visit_the_url_for_group1(step, doc_name):
+    doc = Document.objects.get(name=doc_name)
+    goto_url(reverse('edit', args=[doc.id]))
+
+@step(u'Then I should be at the "([^"]*)" page')
+def then_i_should_be_at_the_group1_page(step, url):
+    assert_at_url(reverse(url))
+@step(u'And a document containing "([^"]*)" should not exist')
+def and_a_document_containing_group1_should_not_exist(step, content):
+    ok_(not Document.objects.filter(content__contains=content).exists())
+@step(u'And a document named "([^"]*)" should exist')
+def and_a_document_containing_group1_should_not_exist(step, name):
+    ok_(Document.objects.filter(name=name).exists())
