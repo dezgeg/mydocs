@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.forms import ModelForm, ValidationError
 from django.forms.models import modelformset_factory
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 
 def index(request):
     others_docs = Document.find_accessible_by(request.user)
@@ -49,7 +50,7 @@ def change_permissions(request, document):
         perms = PermissionFormset(request.POST).save(commit=False)
         document.permissions = perms
         document.save()
-        return HttpResponseRedirect('/permissions/' + document.id)
+        return HttpResponseRedirect(reverse('change_permissions', args=[document.id]))
     else:
         # Real formset data should be populated via a queryset, but django-nonrel's ListFields
         # return ordinary lists. So we hack around this by turning the objects to dicts, which

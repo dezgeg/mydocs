@@ -13,15 +13,15 @@
     </head>
     <body>
         {% if user.is_authenticated %}
-            Logged in as {{ user.first_name }} {{ user.last_name }}. <a href="/logout">Log out</a><br/>
+            Logged in as {{ user.first_name }} {{ user.last_name }}. <a href="{% url logout %}">Log out</a><br/>
         {% else %}
             Not logged in.<br/>
-            <form name="fopenid" action="/openid/login/" method="post">
+            <form name="fopenid" action="{% url openid-login %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="openid_identifier" value="https://www.google.com/accounts/o8/id"/>
                 <input type="submit" value="Log in via Google"/>
             </form>
-            <form name="fopenid" action="/openid/login/" method="post">
+            <form name="fopenid" action="{% url openid-login %}" method="post">
                 {% csrf_token %}
                 <input class="openid" type="text" name="openid_identifier" value=""/>
                 <input type="submit" value="Log in with OpenID"/>

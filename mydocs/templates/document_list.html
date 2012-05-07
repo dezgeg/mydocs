@@ -8,14 +8,14 @@
 {% endif %}
 {% for doc in docs %}
     <tr>
-        <td><a href="{{ doc.id }}">{{ doc }}</a></td>
+        <td><a href="{% url edit doc.id %}">{{ doc }}</a></td>
         <td>{{ doc.owner }}</td>
         <td>
             {% if user|can_delete:doc %}
-                <a href="delete/{{ doc.id }}">[delete]</a>
+                <a href="{% url delete doc.id %}">[delete]</a>
             {% endif %}
             {% if user|can_change_perms:doc %}
-                <a href="permissions/{{ doc.id }}">[change permissions]</a>
+                <a href="{% url change_permissions doc.id %}">[change permissions]</a>
             {% endif %}
         </td>
     </tr>

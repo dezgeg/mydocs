@@ -18,8 +18,8 @@ Feature: Add an delete documents
         And I have the document "DONOTWANT" containing "Dont care"
         And I am at the index page
         When I click "[delete]"
-        Then I should not see "DONOTWANT"
-        And I should be at the index page
+        Then I should be at the index page
+        And I should not see "DONOTWANT"
 
     Scenario: Modify a document
         Given I am logged in as "UserA"

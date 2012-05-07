@@ -8,5 +8,5 @@ from django.contrib.auth.views import logout_then_login
 urlpatterns = patterns('mydocs',
     url(r'^', include('edit.urls')),
     url(r'^openid/', include('django_openid_auth.urls')),
-    url(r'^logout$', logout_then_login),
+    url(r'^logout$', logout_then_login, name='logout'),
 )
