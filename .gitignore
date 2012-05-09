@@ -4,3 +4,4 @@ env
 mongodb.pass
 .coverage
 htmlcov/
+*.log

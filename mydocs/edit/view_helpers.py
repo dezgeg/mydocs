@@ -19,7 +19,7 @@ class WritableDocumentForm(ModelForm):
     # writers can change content, but not the name
     def __init__(self, *args, **kwargs):
         super(WritableDocumentForm, self).__init__(*args, **kwargs)
-        self.fields['name'].widget.attrs['readonly'] = True
+        self.fields['name'].widget.attrs['readonly'] = 'readonly'
     # the readonly attribute only affects the HTML widgets.
     # this will actually prevent them from being set from POST requests 
     def clean_title(self):
@@ -32,9 +32,8 @@ class WritableDocumentForm(ModelForm):
 class ReadOnlyDocumentForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(ReadOnlyDocumentForm, self).__init__(*args, **kwargs)
-        print self.fields
         for f in ('name', 'content'):
-            self.fields[f].widget.attrs['readonly'] = True
+            self.fields[f].widget.attrs['readonly'] = 'readonly'
 
     def clean_title(self):
         return self.instance.title

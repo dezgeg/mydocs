@@ -76,6 +76,11 @@ def and_i_visit_the_url_for_group1(step, doc_name):
     doc = Document.objects.get(name=doc_name)
     goto_url(reverse('edit', args=[doc.id]))
 
+@step(u'(?:And|Then|When) I visit the change permissions URL for "([^"]*)"')
+def and_i_visit_the_url_for_group1(step, doc_name):
+    doc = Document.objects.get(name=doc_name)
+    goto_url(reverse('change_permissions', args=[doc.id]))
+
 @step(u'Then I should be at the "([^"]*)" page')
 def then_i_should_be_at_the_group1_page(step, url):
     assert_at_url(reverse(url))

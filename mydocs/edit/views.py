@@ -63,5 +63,5 @@ def change_permissions(request, document):
         # can be entered as the initial form data, and then bump up the number of extra forms accordingly.
         perms = map(lambda p: p.__dict__, document.permissions)
         PermissionFormset = modelformset_factory(UserPermission, extra= 3 + len(perms), can_delete=True)
-        forms = PermissionFormset(initial=perms)
+        forms = PermissionFormset(initial=perms, queryset=UserPermission.objects.none())
     return render(request, 'permissions.html', { 'doc': document, 'forms': forms })

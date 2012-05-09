@@ -15,3 +15,4 @@ Feature: Others should not see my non-public documents
         When I log in as "UserB"
         And I visit the URL for "NON-PUBLIC"
         Then I should see "Permission denied"
+
