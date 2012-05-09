@@ -7,6 +7,7 @@ from djangotoolbox.fields import ListField, DictField, EmbeddedModelField
 from django_mongodb_engine.contrib import MongoDBManager
 
 class Permission:
+    NoAccess = 0
     Read = 1
     Modify = 2
     ChangePerms = 3
@@ -17,6 +18,12 @@ PERMISSIONS = (
     (Permission.Read, 'Access'),
     (Permission.Modify, 'Modify'),
     (Permission.ChangePerms, 'Change permissions')
+)
+# These permissions can be set for anonymous users
+ANON_PERMISSIONS = (
+    (Permission.NoAccess, 'None'),
+    (Permission.Read, 'Access'),
+    (Permission.Modify, 'Modify'),
 )
 
 class UserPermission(models.Model):
@@ -29,6 +36,8 @@ class Document(models.Model):
     name = models.CharField(max_length=64)
     content = models.TextField(blank=True)
     permissions = ListField(EmbeddedModelField(UserPermission))
+    anon_permissions = models.IntegerField("Anonymous user permissions",
+                choices=ANON_PERMISSIONS, default=Permission.NoAccess)
     owner = models.CharField(max_length=64)
 
     def __unicode__(self):
@@ -36,7 +45,7 @@ class Document(models.Model):
 
     def get_permission_for(self, user):
         if not user.is_authenticated():
-            return None
+            return self.anon_permissions
         elif user.email == self.owner:
             return Permission.Owner
         for perm in self.permissions:

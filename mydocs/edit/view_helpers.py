@@ -8,12 +8,17 @@ from djangotoolbox.fields import ListField
 from django.forms import ModelForm, ValidationError
 from django.contrib.auth.decorators import login_required
 
+class AnonPermissionChangeForm(ModelForm):
+    class Meta:
+        model = Document
+        fields = ('anon_permissions',)
+
 class OwnerDocumentForm(ModelForm):
     # used for adding and modifying by owner
     # allows changes to all fields
     class Meta:
         model = Document
-        exclude = ('permissions', 'owner')
+        exclude = ('permissions', 'owner', 'anon_permissions')
 
 class WritableDocumentForm(ModelForm):
     # writers can change content, but not the name
@@ -27,7 +32,7 @@ class WritableDocumentForm(ModelForm):
 
     class Meta:
         model = Document
-        exclude = ('permissions', 'owner')
+        exclude = ('permissions', 'owner', 'anon_permissions')
 
 class ReadOnlyDocumentForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -42,7 +47,7 @@ class ReadOnlyDocumentForm(ModelForm):
 
     class Meta:
         model = Document
-        exclude = ('permissions', 'owner')
+        exclude = ('permissions', 'owner', 'anon_permissions')
 
 def document_form_for_permission(perm):
     if perm >= Permission.Owner: return OwnerDocumentForm

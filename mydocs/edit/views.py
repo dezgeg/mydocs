@@ -56,7 +56,9 @@ def change_permissions(request, document):
     if request.POST:
         PermissionFormset = modelformset_factory(UserPermission, can_delete=True)
         forms = PermissionFormset(request.POST)
-        if forms.is_valid():
+        anon_perms = AnonPermissionChangeForm(request.POST, instance=document)
+        if forms.is_valid() and anon_perms.is_valid():
+            anon_perms.save()
             perms = forms.save(commit=False)
             document.permissions = perms
             document.save()
@@ -69,4 +71,8 @@ def change_permissions(request, document):
         perms = map(lambda p: p.__dict__, document.permissions)
         PermissionFormset = modelformset_factory(UserPermission, extra= 3 + len(perms), can_delete=True)
         forms = PermissionFormset(initial=perms, queryset=UserPermission.objects.none())
-    return render(request, 'permissions.html', { 'doc': document, 'forms': forms })
+    return render(request, 'permissions.html', {
+        'doc': document,
+        'forms': forms,
+        'anon_perms': AnonPermissionChangeForm(instance=document)
+    })

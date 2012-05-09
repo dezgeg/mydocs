@@ -27,3 +27,9 @@ def set_permission_field(step, field, num, value):
         field = world.browser.find_element_by_xpath('//input[@name="form-%d-%s"]' % (num, field.lower()))
         field.clear()
         field.send_keys(value)
+
+@step('And I set the anonymous user permissions to "([^"]*)"')
+def set_anon_permission_field(step, value):
+        world.browser.find_element_by_xpath(
+            '//select[@name="anon_permissions"]/option[text()="%s"]' % value
+        ).click()
