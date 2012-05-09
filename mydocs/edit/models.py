@@ -20,7 +20,7 @@ PERMISSIONS = (
 )
 
 class UserPermission(models.Model):
-    email = models.CharField(max_length=64)
+    email = models.EmailField(max_length=64)
     permission = models.IntegerField(choices=PERMISSIONS)
 
 class Document(models.Model):

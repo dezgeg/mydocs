@@ -8,6 +8,7 @@ from django.forms import ModelForm, ValidationError
 from django.forms.models import modelformset_factory
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.contrib import messages
 
 def index(request):
     others_docs = Document.find_accessible_by(request.user)
@@ -25,6 +26,7 @@ def add(request):
             doc = doc.save(False)
             doc.owner = request.user.email
             doc.save()
+            messages.success(request, "Document '%s' was created." % doc.name)
             return HttpResponseRedirect('/')
     else:
         doc = OwnerDocumentForm()
@@ -36,7 +38,8 @@ def edit(request, document):
     if request.POST:
         doc = form_class(request.POST, instance= document)
         if doc.is_valid():
-            doc.save()
+            doc = doc.save()
+            messages.success(request, "Document '%s' was modified." % doc.name)
             return HttpResponseRedirect('/')
     else:
         doc = form_class(instance=document)
@@ -45,6 +48,7 @@ def edit(request, document):
 @document_view(Permission.Owner)
 def delete(request, document):
     document.delete()
+    messages.success(request, "Document '%s' was deleted." % document.name)
     return HttpResponseRedirect('/')
 
 @document_view(Permission.ChangePerms)
@@ -56,7 +60,8 @@ def change_permissions(request, document):
             perms = forms.save(commit=False)
             document.permissions = perms
             document.save()
-            return HttpResponseRedirect(reverse('change_permissions', args=[document.id]))
+            messages.success(request, "Permissions changed for '%s'." % document.name)
+            return HttpResponseRedirect('/')
     else:
         # Real formset data should be populated via a queryset, but django-nonrel's ListFields
         # return ordinary lists. So we hack around this by turning the objects to dicts, which

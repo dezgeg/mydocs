@@ -19,7 +19,9 @@ Feature: Add an delete documents
         And I am at the index page
         When I click "[delete]"
         Then I should be at the index page
-        And I should not see "DONOTWANT"
+        And I should see "Document 'DONOTWANT' was deleted"
+        When I am at the index page
+        Then I should not see "DONOTWANT"
 
     Scenario: Modify a document
         Given I am logged in as "UserA"
@@ -29,5 +31,6 @@ Feature: Add an delete documents
         Then I should see "Foo"
         When I fill in "Content" with "Bar"
         And I press "Save"
+        Then I should see "Document 'CHANGEME' was modified"
         And I click "CHANGEME"
         Then I should see "Bar" in "Content"

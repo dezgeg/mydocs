@@ -4,7 +4,8 @@
     <form method="POST" action="">
         {% csrf_token %}
 
-        {# Tabular forms display: http://djangosnippets.org/snippets/1442/ #}
+        {# Tabular formset display: http://djangosnippets.org/snippets/1442/ #}
+        {# Modified to add errors to a separate column #}
         {{ forms.management_form }}
         {{ forms.non_form_errors.as_ul }}
         <table>
@@ -14,6 +15,11 @@
                 {% for field in form.visible_fields %}
                 <th>{{ field.label|capfirst }}</th>
                 {% endfor %}
+                <th>
+                    {% if forms.errors %}
+                        Errors
+                    {% endif %}
+                </th>
             </tr></thead>
             {% endif %}
             <tr>
@@ -24,10 +30,19 @@
                     {{ hidden }}
                     {% endfor %}
                 {% endif %}
-                    {{ field.errors.as_ul }}
                     {{ field }}
                 </td>
             {% endfor %}
+            <td>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        {% if forloop.first %}
+                            <b>{{ field.label|capfirst }}:</b>
+                        {% endif %}
+                        {{ error }}
+                    {% endfor %}
+                {% endfor %}
+            </td>
             </tr>
         {% endfor %}
         </table>
