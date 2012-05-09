@@ -11,21 +11,28 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+# Determine where we are running, and set mongodb credentials accordingly.
+RUNNING_IN = 'heroku'
 pw = os.environ.get('MONGODB_PASS') # Heroku uses this
-IN_HEROKU = True
 if pw is None:
-    IN_HEROKU = False
-    with open(os.path.join(PROJECT_PATH, 'mongodb.pass')) as f: # Local machine uses this
-        pw = f.readline().strip()
+    RUNNING_IN = 'dezgeg'
+    try:
+        with open(os.path.join(PROJECT_PATH, 'mongodb.pass')) as f: # Local machine uses this
+            pw = f.readline().strip()
+    except:
+        RUNNING_IN = 'other'
 
 # The OpenID auth plugin uses joins in it's code, so it can't be used with MongoDB.
 DATABASE_ROUTERS = ['mydocs.db_routers.DocumentRouter']
 DATABASES = {
-    'default': {
+    'default': { # Heroku's postgresql configuration overrides this automatically.
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(PROJECT_PATH, 'db.sqlite'),
-    },
-    'documents': {
+    }
+}
+
+if RUNNING_IN != 'other': # if we have the password to the AWS mongodb
+    DATABASES['documents'] = {
         'ENGINE': 'django_mongodb_engine',
         'NAME': 'mydocs',
         'USER': 'mydocs',
@@ -33,7 +40,15 @@ DATABASES = {
         'HOST': 'ec2-107-20-54-207.compute-1.amazonaws.com',
         'PORT': '',
     }
-}
+else: # assumes we have a passwordless mongodb on localhost (which it is by default)
+    DATABASES['documents'] = {
+        'ENGINE': 'django_mongodb_engine',
+        'NAME': 'mydocs',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
+    }
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -137,7 +152,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
-if not IN_HEROKU:
+if RUNNING_IN != 'heroku': # This is only required for selenium tests
     INSTALLED_APPS += ('lettuce.django',)
 
 # For OpenID
