@@ -4,7 +4,6 @@ from mydocs.edit.view_helpers import *
 
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
-from django.forms import ModelForm, ValidationError
 from django.forms.models import modelformset_factory
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
@@ -74,6 +73,7 @@ def change_permissions(request, document):
         perms = map(lambda p: p.__dict__, document.permissions)
         PermissionFormset = modelformset_factory(UserPermission, extra= 3 + len(perms), can_delete=True)
         forms = PermissionFormset(initial=perms, queryset=UserPermission.objects.none())
+
     return render(request, 'permissions.html', {
         'doc': document,
         'forms': forms,

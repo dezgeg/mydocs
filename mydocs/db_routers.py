@@ -1,5 +1,6 @@
+# Documents belong to the mongodb,
+# other stuff to the SQL database for compability
 class DocumentRouter(object):
-
     def db_for_read(self, model, **hints):
         if model._meta.object_name in ('Document', 'UserPermission'):
             return 'documents'

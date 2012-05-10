@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django_openid_auth.exceptions import IdentityAlreadyClaimed
-from djangotoolbox.fields import ListField, DictField, EmbeddedModelField
+from djangotoolbox.fields import ListField, EmbeddedModelField
 from django_mongodb_engine.contrib import MongoDBManager
 
 class Permission:
@@ -56,6 +56,7 @@ class Document(models.Model):
 
         return self.anon_permissions
 
+    # Return a list of e-mails of the users who can access the document
     def permitted_user_emails(self):
         lst = []
         if self.anon_permissions:
@@ -63,6 +64,7 @@ class Document(models.Model):
         lst += [self.owner] + map(lambda p: p.email, self.permissions)
         return lst
 
+    # Find documents that somebody else has given me access.
     @staticmethod
     def find_accessible_by(user):
         if not user.is_authenticated():
@@ -74,13 +76,17 @@ class Document(models.Model):
                     'email': user.email }}}
         return Document.objects.raw_query(query)
 
+    # Find my own documents
     @staticmethod
     def find_own(user):
         if not user.is_authenticated():
             return Document.objects.none()
         return Document.objects.filter(owner=user.email)
 
+# Require unique e-mail addresses.
+# However, this is problematic, since
+# OpenID providers might not send confirmation mails to them..
 @receiver(pre_save, sender=User)
 def require_unique_email(sender, instance, **kwargs):
-    if User.objects.filter(email=instance.email).exclude(pk=instance.pk).count() >= 1:
+    if User.objects.filter(email=instance.email).exclude(pk=instance.pk).exists():
         raise IdentityAlreadyClaimed("Someone has already registered with this e-mail.")

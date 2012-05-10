@@ -34,7 +34,7 @@ Feature: Add an delete documents
         And I press "Save"
         Then I should see "Document 'CHANGEME' was modified"
         And I wait a while
-        And I should see "Bar" in "Content"
+        Then I should see "Bar" in "Content"
 
     Scenario: Rename a document
         Given I am logged in as "UserA"
