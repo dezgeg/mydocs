@@ -3,6 +3,8 @@
     <tr>
         <th>Name</th>
         <th>Owner</th>
+        <th>Created</th>
+        <th>Last modified</th>
         <th>Actions</th>
     </tr>
 {% endif %}
@@ -10,6 +12,8 @@
     <tr>
         <td><a href="{% url edit doc.id %}">{{ doc }}</a></td>
         <td>{{ doc.owner }}</td>
+        <td>{{ doc.created }}</td>
+        <td>{{ doc.last_modified }}</td>
         <td>
             {% if user|can_delete:doc %}
                 <a href="{% url delete doc.id %}">[delete]</a>

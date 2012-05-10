@@ -27,7 +27,7 @@ def add(request):
             doc.owner = request.user.email
             doc.save()
             messages.success(request, "Document '%s' was created." % doc.name)
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect(reverse('edit', args=[doc.id]))
     else:
         doc = OwnerDocumentForm()
     return render(request, 'edit.html', { 'document_form': doc })
@@ -40,7 +40,7 @@ def edit(request, document):
         if doc.is_valid():
             doc = doc.save()
             messages.success(request, "Document '%s' was modified." % doc.name)
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect(reverse('edit', args=[doc.id]))
     else:
         doc = form_class(instance=document)
     return render(request, 'edit.html', { 'id': document.id, 'document_form': doc })

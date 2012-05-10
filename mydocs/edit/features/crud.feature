@@ -8,10 +8,10 @@ Feature: Add an delete documents
         And I fill in "Name" with "Test document"
         And I change the content to "Test stuff"
         And I press "Save"
-        Then I should be at the index page
-        And I should see "Test document"
-        When I click "Test document"
         Then I should see "Test stuff" in "Content"
+        And I should see "Document 'Test document' was created"
+        When I go to the index page
+        Then I should see "Test document"
 
     Scenario: Delete a document
         Given I am logged in as "UserA"
@@ -33,6 +33,4 @@ Feature: Add an delete documents
         When I change the content to "Bar"
         And I press "Save"
         Then I should see "Document 'CHANGEME' was modified"
-        And I click "CHANGEME"
-        And I wait a while
         Then I should see "Bar" in "Content"

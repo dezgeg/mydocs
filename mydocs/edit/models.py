@@ -32,6 +32,8 @@ class UserPermission(models.Model):
 
 class Document(models.Model):
     objects = MongoDBManager()
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
 
     name = models.CharField(max_length=64)
     content = models.TextField(blank=True)
