@@ -19,6 +19,21 @@
 {% endblock %}
 {% block content %}
     <h1>Document</h1>
+    {% if id %}
+        {% with users=document_form.instance.permitted_user_emails %}
+            {% if users.length <= 1 %}
+                Users who have access to this document: {{ users|join:", " }}.
+            {% else %}
+                Others cannot access this document.
+            {% endif %}
+            <a href="{% url change_permissions id %}">[change]</a>
+            {% if users %}
+                <br/>Use this URL to share this document:<br/>
+                <textarea id="share_url" rows="1" cols="80" readonly="readonly">http://{{ request.get_host }}{% url edit id %}</textarea>
+            {% endif %}
+            <hr/>
+        {% endwith %}
+    {% endif %}
     <form method="POST" action="{{ id|default:"add" }}">
         {% csrf_token %}
         {{ document_form.as_p }}

@@ -56,6 +56,13 @@ class Document(models.Model):
 
         return self.anon_permissions
 
+    def permitted_user_emails(self):
+        lst = []
+        if self.anon_permissions:
+            lst += ['Anonymous users']
+        lst += [self.owner] + map(lambda p: p.email, self.permissions)
+        return lst
+
     @staticmethod
     def find_accessible_by(user):
         if not user.is_authenticated():
