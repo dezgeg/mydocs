@@ -21,11 +21,13 @@
             <form name="fopenid" action="{% url openid-login %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="openid_identifier" value="https://www.google.com/accounts/o8/id"/>
+                <input type="hidden" name="next" value="{{ request.path }}"/>
                 <input type="submit" value="Log in via Google"/>
             </form>
             <form name="fopenid" action="{% url openid-login %}" method="post">
                 {% csrf_token %}
                 <input class="openid" type="text" name="openid_identifier" value=""/>
+                <input type="hidden" name="next" value="{{ request.path }}"/>
                 <input type="submit" value="Log in with OpenID"/>
             </form>
         {% endif %}

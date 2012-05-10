@@ -1,4 +1,6 @@
 import os
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
+
 # Django settings for mydocs project.
 PROJECT_PATH = os.path.dirname(__file__)
 
@@ -151,6 +153,9 @@ INSTALLED_APPS = (
 if RUNNING_IN != 'heroku': # This is only required for selenium tests
     INSTALLED_APPS += ('lettuce.django',)
 
+TEMPLATE_CONTEXT_PROCESSORS = TCP + (
+    'django.core.context_processors.request',
+)
 # For OpenID
 AUTHENTICATION_BACKENDS = (
     'django_openid_auth.auth.OpenIDBackend',
