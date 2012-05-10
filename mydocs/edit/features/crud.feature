@@ -29,6 +29,7 @@ Feature: Add an delete documents
         And I have the document "CHANGEME" containing "Foo"
         And I am at the index page
         When I click "CHANGEME"
+        And I wait a while
         Then I should see "Foo"
         When I change the content to "Bar"
         And I press "Save"
