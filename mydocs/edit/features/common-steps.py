@@ -4,9 +4,14 @@ from lettuce import world, step
 from django.core.urlresolvers import reverse
 from mydocs.edit.features.common import login_as, goto_url, assert_at_url
 from mydocs.edit.models import Document
+from django.contrib.auth.models import User
 from nose.tools import ok_
 
-@step(u'Given I am logged in as "([^"]*)"')
+@step(u'Given there is a user "([^"]*)"')
+def log_in(step, username):
+    User.objects.create_user(username, username + "@test.com", "pass")
+
+@step(u'(?:(?:Given|And) I am logged|When I log) in as "([^"]*)"')
 def log_in(step, user):
     login_as(user)
 

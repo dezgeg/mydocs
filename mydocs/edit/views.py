@@ -56,7 +56,8 @@ def delete(request, document):
 @document_view(Permission.ChangePerms)
 def change_permissions(request, document):
     if request.POST:
-        PermissionFormset = modelformset_factory(UserPermission, can_delete=True)
+        PermissionFormset = modelformset_factory(UserPermission, can_delete=True,
+                                                 formset=PermissionChangeFormSet)
         forms = PermissionFormset(request.POST)
         anon_perms = AnonPermissionChangeForm(request.POST, instance=document)
         if forms.is_valid() and anon_perms.is_valid():
@@ -71,7 +72,9 @@ def change_permissions(request, document):
         # return ordinary lists. So we hack around this by turning the objects to dicts, which
         # can be entered as the initial form data, and then bump up the number of extra forms accordingly.
         perms = map(lambda p: p.__dict__, document.permissions)
-        PermissionFormset = modelformset_factory(UserPermission, extra= 3 + len(perms), can_delete=True)
+        PermissionFormset = modelformset_factory(UserPermission,
+                                extra= 3 + len(perms), can_delete=True,
+                                formset=PermissionChangeFormSet)
         forms = PermissionFormset(initial=perms, queryset=UserPermission.objects.none())
 
     return render(request, 'permissions.html', {

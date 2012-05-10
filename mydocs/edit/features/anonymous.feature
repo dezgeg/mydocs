@@ -13,7 +13,8 @@ Feature: Let anonymous users to see my documents
         Then I should see "Hello all"
 
     Scenario: Anonymous users' permissions apply to logged in users too
-        Given I am logged in as "UserA"
+        Given there is a user "UserB"
+        And I am logged in as "UserA"
         And I have the document "FreeForAll" containing "Hello"
 
         When I visit the change permissions URL for "FreeForAll"

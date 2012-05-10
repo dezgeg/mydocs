@@ -32,6 +32,10 @@ Feature: Have permissions
         And I have the document "ToMany" containing "Hello all"
         And "UserB" has the permission "ChangePerms" to "ToMany"
 
+        When I log in as "UserC"
+        And I visit the URL for "ToMany"
+        Then I should see "Permission denied"
+
         When I log in as "UserB"
         And I visit the change permissions URL for "ToMany"
         And I set "Email" for the permission #1 to "UserC@test.com"

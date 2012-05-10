@@ -1,8 +1,11 @@
 from mydocs.edit.models import Document, Permission
+from django.contrib.auth.models import User
 
+from django.forms.formsets import BaseFormSet
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.forms import ModelForm
+from django.forms.models import BaseModelFormSet
 
 # Used by the change permissions page
 class AnonPermissionChangeForm(ModelForm):
@@ -44,6 +47,44 @@ def document_form_for_permission(perm):
     if perm >= Permission.Owner: return OwnerDocumentForm
     elif perm >= Permission.Modify: return WritableDocumentForm
     else: return ReadOnlyDocumentForm
+
+class PermissionChangeFormSet(BaseModelFormSet):
+
+    # Add error message 'msg' to form field
+    def add_error(self, form, field, msg):
+        if not field in form._errors:
+            form._errors[field] = form.error_class([])
+        if msg not in form._errors[field]:
+            form._errors[field].append(msg)
+
+    # Make sure there are no duplicate or nonexisting emails.
+    def clean(self):
+        emails = {} # dict of already seen e-mails
+
+        for i in range(0, self.total_form_count()):
+            form = self.forms[i]
+            # skip forms that totally failed validation
+            if not hasattr(form, 'cleaned_data'):
+                continue
+            # skip management form
+            email = form.cleaned_data.get('email')
+            if not email:
+                continue
+            if not self.is_valid_email(emails, email, form):
+                del form.cleaned_data['email']
+            emails[email] = form
+
+    def is_valid_email(self, emails, email, form):
+            ret = True
+            if emails.get(email):
+                msg = 'There are multiple permissions specified for this user.'
+                self.add_error(form, 'email', msg)
+                self.add_error(emails.get(email), 'email', msg)
+                ret = False
+            if not User.objects.filter(email=email).exists():
+                self.add_error(form, 'email', 'This user does not exist.')
+                ret = False
+            return ret
 
 # a decorator for view functions acting on existing documents
 # checks that the logged-in user has the proper permissions to the document

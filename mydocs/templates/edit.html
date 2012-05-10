@@ -21,8 +21,8 @@
     <h1>Document</h1>
     {% if id %}
         {% with users=document_form.instance.permitted_user_emails %}
-            {% if users.length <= 1 %}
-                Users who have access to this document: {{ users|join:", " }}.
+            {% if users|length >= 1 %}
+                Users who have access to this document: <b>{{ users|join:", " }}</b>.
             {% else %}
                 Others cannot access this document.
             {% endif %}
