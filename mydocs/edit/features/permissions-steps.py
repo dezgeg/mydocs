@@ -14,7 +14,7 @@ def and_i_should_not_be_able_to_change_group1(step, field):
     return world.browser.find_element_by_xpath('//*[@name="%s"][@readonly]' % field.lower())
 @step(u'Then the document "([^"]*)" should contain "([^"]*)"')
 def then_the_document_group1_should_contain_group2(step, doc_name, content):
-    Document.objects.get(name=doc_name, content=content)
+    Document.objects.get(name=doc_name, content__contains=content)
 
 @step('And I set "([^"]*)" for the permission #([0-9]+) to "([^"]*)"')
 def set_permission_field(step, field, num, value):

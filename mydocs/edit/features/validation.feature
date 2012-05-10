@@ -5,7 +5,8 @@ Feature: Make sure all the documents are valid.
     Scenario: Try to add a nameless document
         Given I am logged in as "UserA"
         And I click "Add a document"
-        And I fill in "Content" with "This document has no name"
+        And I fill in "Name" with ""
+        And I change the content to "This document has no name"
         And I press "Save"
         Then I should be at the "add" page
         And I should see "This field is required."

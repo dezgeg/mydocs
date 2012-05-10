@@ -6,7 +6,7 @@ Feature: Add an delete documents
         Given I am logged in as "UserA"
         And I click "Add a document"
         And I fill in "Name" with "Test document"
-        And I fill in "Content" with "Test stuff"
+        And I change the content to "Test stuff"
         And I press "Save"
         Then I should be at the index page
         And I should see "Test document"
@@ -19,6 +19,7 @@ Feature: Add an delete documents
         And I am at the index page
         When I click "[delete]"
         Then I should be at the index page
+        And I wait a while
         And I should see "Document 'DONOTWANT' was deleted"
         When I am at the index page
         Then I should not see "DONOTWANT"
@@ -29,8 +30,9 @@ Feature: Add an delete documents
         And I am at the index page
         When I click "CHANGEME"
         Then I should see "Foo"
-        When I fill in "Content" with "Bar"
+        When I change the content to "Bar"
         And I press "Save"
         Then I should see "Document 'CHANGEME' was modified"
         And I click "CHANGEME"
+        And I wait a while
         Then I should see "Bar" in "Content"

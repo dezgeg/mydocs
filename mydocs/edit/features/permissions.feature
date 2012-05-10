@@ -33,7 +33,7 @@ Feature: Have permissions
         Then I should see "Hello"
         And I should not be able to change "Name"
         And I should see "Save"
-        When I fill in "Content" with "Hallo"
+        When I change the content to "Hallo"
         And I press "Save"
         Then the document "ToMyFriend" should contain "Hallo"
 

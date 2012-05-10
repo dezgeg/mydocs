@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import time
 from django.test.client import Client
 from django.core.management import call_command
 from django.core.urlresolvers import reverse
@@ -71,6 +72,10 @@ def and_i_have_a_document_group1(step, name, content):
 def then_i_should_see_group1_in_group2(step, value, name):
     return world.browser.find_element_by_xpath('//*[@name="%s"][contains(., "%s")]' % (name.lower(), value))
 
+@step(u'(?:And|When) I change the content to "([^"]*)"')
+def set_ckeditor_text(step, content):
+    world.browser.execute_script("CKEDITOR.instances['id_content'].setData('%s');" % content)
+
 @step(u'(?:And|Then|When) I visit the URL for "([^"]*)"')
 def and_i_visit_the_url_for_group1(step, doc_name):
     doc = Document.objects.get(name=doc_name)
@@ -90,3 +95,7 @@ def and_a_document_containing_group1_should_not_exist(step, content):
 @step(u'And a document named "([^"]*)" should exist')
 def and_a_document_containing_group1_should_not_exist(step, name):
     ok_(Document.objects.filter(name=name).exists())
+
+@step(u'(?:Then|And) I wait a while')
+def busy_wait_for_crappy_js(step):
+    time.sleep(2)

@@ -5,6 +5,7 @@
 #        source ./run_coverage [<opt-feature-file>]
 
 cd "$(dirname "$0")/.."
+source env/bin/activate
 EXCLUDE='mydocs/manage.py,*/__init__.py'
 
 coverage erase

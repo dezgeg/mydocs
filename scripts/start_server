@@ -1,2 +1,3 @@
 #!/bin/bash
+source `dirname "$0"`/../env/bin/activate
 `dirname "$0"`/../mydocs/manage.py runserver

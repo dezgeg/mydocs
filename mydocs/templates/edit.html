@@ -1,6 +1,21 @@
 {% extends "page.html" %}
 {% load document_permissions %}
 
+{% block additional_head %}
+    <script type="text/javascript">
+        {% if not user|can_modify:document_form.instance %}
+            {# Delete the save button and set read only #}
+            CKEDITOR.config.toolbarStartupExpanded = false;
+            CKEDITOR.config.toolbar_Full[0].items.splice(2, 1);
+            CKEDITOR.on('instanceReady', function(ev) {
+                ev.editor.setReadOnly(true);
+            });
+        {% endif %}
+        window.addEventListener('load', function() {
+            CKEDITOR.replace('content');
+        });
+    </script>
+{% endblock %}
 {% block content %}
     <h1>Document</h1>
     <form method="POST" action="{{ id|default:"add" }}">
