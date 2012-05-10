@@ -3,7 +3,7 @@
 
 {% block additional_head %}
     <script type="text/javascript">
-        {% if not user|can_modify:document_form.instance %}
+        {% if document_form.instance.pk and not user|can_modify:document_form.instance %}
             {# Delete the save button and set read only #}
             CKEDITOR.config.toolbarStartupExpanded = false;
             CKEDITOR.config.toolbar_Full[0].items.splice(2, 1);
