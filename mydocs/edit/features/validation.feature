@@ -20,3 +20,15 @@ Feature: Make sure all the documents are valid.
         And I press "Save"
         Then I should see "This field is required"
         And a document named "CHANGEME" should exist
+
+    Scenario: Try to a add a permission to an invalid e-mail
+        Given I am logged in as "UserA"
+        And I have the document "CHANGEME" containing "Foo"
+        When I visit the change permissions URL for "CHANGEME"
+        And I set "Email" for the permission #1 to "ASDDSDSASD"
+        And I set "Permission" for the permission #1 to "Modify"
+        And I set "Email" for the permission #2 to "AValid@Email.com"
+        And I set "Permission" for the permission #2 to "Access"
+        And I press "Save"
+        Then I should see "Enter a valid e-mail address"
+        And I should see "AValid@Email.com"

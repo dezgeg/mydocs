@@ -3,16 +3,6 @@ Feature: Have permissions
     I want to share my documents with others
     But outsiders should not see my documents
 
-    Scenario: I can allow anonymous users to see my document
-        Given I am logged in as "UserA"
-        And I have the document "Totally public" containing "Hello all"
-        When I visit the change permissions URL for "Totally public"
-        And I set the anonymous user permissions to "Access"
-        And I press "Save"
-        When I log out
-        And I visit the URL for "Totally public"
-        Then I should see "Hello all"
-
     Scenario: I can make my document readable to my friend
         Given I am logged in as "UserA"
         And I have the document "ToMyFriend" containing "Hello"

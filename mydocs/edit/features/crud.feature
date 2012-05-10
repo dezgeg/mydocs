@@ -33,4 +33,13 @@ Feature: Add an delete documents
         When I change the content to "Bar"
         And I press "Save"
         Then I should see "Document 'CHANGEME' was modified"
-        Then I should see "Bar" in "Content"
+        And I wait a while
+        And I should see "Bar" in "Content"
+
+    Scenario: Rename a document
+        Given I am logged in as "UserA"
+        And I have the document "CHANGEME" containing "Foo"
+        When I visit the URL for "CHANGEME"
+        And I fill in "Name" with "NEWME"
+        And I press "Save"
+        Then I should see "Document 'CHANGEME' was renamed to 'NEWME'"

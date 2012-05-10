@@ -33,17 +33,20 @@ def add(request):
     return render(request, 'edit.html', { 'document_form': doc })
 
 @document_view(Permission.Read, Permission.Modify)
-def edit(request, document):
-    form_class = document_form_for_permission(document.get_permission_for(request.user))
+def edit(request, existing_doc):
+    form_class = document_form_for_permission(existing_doc.get_permission_for(request.user))
     if request.POST:
-        doc = form_class(request.POST, instance= document)
+        old_name = existing_doc.name
+        doc = form_class(request.POST, instance= existing_doc)
         if doc.is_valid():
             doc = doc.save()
+            if doc.name != old_name:
+                messages.success(request, "Document '%s' was renamed to '%s'." % (old_name, doc.name))
             messages.success(request, "Document '%s' was modified." % doc.name)
             return HttpResponseRedirect(reverse('edit', args=[doc.id]))
     else:
-        doc = form_class(instance=document)
-    return render(request, 'edit.html', { 'id': document.id, 'document_form': doc })
+        doc = form_class(instance=existing_doc)
+    return render(request, 'edit.html', { 'id': existing_doc.id, 'document_form': doc })
 
 @document_view(Permission.Owner)
 def delete(request, document):

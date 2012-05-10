@@ -52,9 +52,9 @@ class Document(models.Model):
             return Permission.Owner
         for perm in self.permissions:
             if perm.email == user.email:
-                return perm.permission
+                return max(perm.permission, self.anon_permissions)
 
-        return None
+        return self.anon_permissions
 
     @staticmethod
     def find_accessible_by(user):
